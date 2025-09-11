@@ -37,7 +37,7 @@ int main(int argc, char **argv) {
 
 
     // computing average
-    avgUsage = totalGbs / day
+    avgUsage = totalGbs / day // ex: if we have 25gb total used / the 5th day then we get a 5gb/day usage
 
 
     // if the user is under their average daily use
