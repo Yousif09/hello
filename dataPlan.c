@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 
     if(avgUsage < baseAverage) {
         // if the user is under their average daily use
-        printf("%d days used, %d days remaining\n Average daily use: %fGB/day\n", day, remainingDays, avgUsage);
+        printf(" %d days used, %d days remaining\n Average daily use: %fGB/day\n", day, remainingDays, avgUsage);
         printf("\nYou are at or below your average daily use (%fGB/day)\n You can use up to %fGB/day and stay below your data plan limit\n", baseAverage, gbPerDay);
     } else if(avgUsage > baseAverage) {
         // if the user is over their average daily use
