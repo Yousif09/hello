@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
     remainingGbs = totalGbs - numGbs;
 
     // remaining days
-    reaminingDays = 
+    reaminingDays = 30 - day; 
 
     // how much gbs can be used per day
     gbPerDay = remainingGbs / remainingDays;
