@@ -34,12 +34,22 @@ int main(int argc, char **argv) {
 
 
     double numGbs = atof(argv[1]);
+    if(numGbs < 0) {
+        printf("ERROR\n");
+        exit(1);
+    }
+
     int day = atoi(argv[2]);
     if(day < 0) {
         printf("ERROR\n");
         exit(1);
     }
+
     double GbsUsed = atof(argv[3]);
+    if(GbsUsed < 0){
+        printf("ERROR\n");
+        exit(1);
+    }
 
 
 
