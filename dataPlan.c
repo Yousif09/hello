@@ -26,53 +26,49 @@ int main(int argc, char **argv) {
 
 
 
+
+    if(argc != 4) {
+        printf("ERROR: incorrect number of command line arguments\n");
+        exit(1);
+    }
+
+
     double numGbs = atof(argv[1]);
     int day = atoi(argv[2]);
-    double totalGbs = atof(argv[3]);
-    double avgUsage;
-    double baseAverage;
-    double remainingGbs;
-    int remainingDays;
-    double gbPerDay;
-
-
-
-
+    double GbsUsed = atof(argv[3]);
 
 
 
     // computing average usage
-    avgUsage = numGbs / day; // ex: if we have 25gb used / the 5th day then we get a 5gb/day usage
+    double avgUsage = GbsUsed / day;
 
-    // average expected usage
-    baseAverage = numGbs / 30;
+    // allowed daily
+    double baseAverage = numGbs / 30;
 
     // how much gbs left
-    remainingGbs = totalGbs - numGbs;
+    double remainingGbs = numGbs - GbsUsed;
 
     // remaining days
-    remainingDays = 30 - day;
+    int remainingDays = 30 - day;
 
     // how much gbs can be used per day
-    gbPerDay = remainingGbs / remainingDays;
+    double gbPerDay = remainingGbs / remainingDays;
+
+    double excess = GbsUsed + avgUsage * remainingDays - numGbs;
 
 
-    if(avgUsage < baseAverage) {
-        // if the user is under their average daily use
-        printf(" %d days used, %d days remaining\n Average daily use: %fGB/day\n", day, remainingDays, avgUsage);
-        printf("\nYou are at or below your average daily use (%fGB/day)\n You can use up to %fGB/day and stay below your data plan limit\n", baseAverage, gbPerDay);
-    } else if(avgUsage > baseAverage) {
-        // if the user is over their average daily use
-        printf("\n%ddays used, %ddays remaining\n Average daily use: %fGB/day\n", day, remainingDays, avgUsage);
-        printf("You have already met your limit for this month. Looks like you're getting some overage charges...\n");
+    if(avgUsage > baseAverage) {
+        printf(" %d days used, %d days remaining\n Average daily use: %.3f GB/day\n", day, remainingDays, avgUsage);
+        printf("You are EXCEEDING your average daily use (%.2f GB/day).\n", baseAverage);
+        printf("Continuing this high usage, you'll exceed your data plan by %.2f GB\n", excess);
+        printf("\nTo stay below your data plan, use no more than %.2f GB/day\n", gbPerDay);
+    } else if(avgUsage < baseAverage) {
+        printf(" %d days used, %d days remaining\n Average daily use: %.3fGB/day\n", day, remainingDays, avgUsage);
+        printf("\nYou are at or below your average daily use (%.3fGB/day)\n You can use up to %.3fGB/day and stay below your data plan limit\n", baseAverage, gbPerDay);
+    } else {
+         printf(" %d days used, %d days remaining\n Average daily use: %.3fGB/day\n", day, remainingDays, avgUsage);
+         printf("You have already met your limit for this month. Looks like you're getting some overage charges...\n");
     }
-
-
-
-
-
-
-
 
 
 
