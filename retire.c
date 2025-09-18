@@ -65,5 +65,11 @@
     if (scanf("%d", &years) != 1 || years <= 0) {
         printf("ERROR\n"); return 1;
     }
+    printf("Month    Interest     Balance\n");
 
+        printf("%5d $%10.2f $%10.2f\n", i, interest, balance);
+    }
+
+    printf("Total Interest Earned: $%10.2f\n", totalInterest);
+    printf("Total Nest Egg: $%10.2f\n", balance);
  }
