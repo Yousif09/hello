@@ -1,0 +1,113 @@
+Two functions:
+RGB → CMYK: rgbToCMYK(r, g, b, &c, &m, &y, &k)
+
+
+CMYK → RGB: cmykToRGB(c, m, y, k, &r, &g, &b)
+
+
+Both return a status code:
+colorOk (everything fine)
+
+
+or one/more error flags OR’d together: colorNull (a required pointer was NULL), colorRange (input out of range), colorNotFinite (NaN/Inf for CMYK inputs).
+
+
+How rgbToCMYK works (step-by-step, in English)
+Check outputs exist.
+ If any of the four output pointers (c, m, y, k) is missing (NULL), mark colorNull.
+
+
+Validate input range.
+ Make sure r, g, b are each between 0 and 255. If not, mark colorRange.
+
+
+If any error so far, stop and return it.
+ Don’t write to outputs when there’s an error.
+
+
+Handle the black special case.
+ If r = g = b = 0, directly set CMYK to (0, 0, 0, 1) and return success.
+ (This avoids a division-by-zero in the general formula.)
+
+
+Scale RGB to fractions.
+ Convert r, g, b into r′, g′, b′ by dividing each by 255 so they’re in [0, 1].
+
+
+Find the “black key” amount K.
+ Compute the maximum of (r′, g′, b′); then set K = 1 − max(r′, g′, b′).
+
+
+Compute the chroma values C, M, Y.
+ Use the standard formulas with the shared denominator (1 − K):
+
+
+C = (1 − r′ − K) / (1 − K)
+
+
+M = (1 − g′ − K) / (1 − K)
+
+
+Y = (1 − b′ − K) / (1 − K)
+
+
+Write results to the outputs and succeed.
+ Store C, M, Y, K via the pointers and return colorOk.
+
+
+How cmykToRGB works (step-by-step, in English)
+Check outputs exist.
+ If any of the three output pointers (r, g, b) is missing, mark colorNull.
+
+
+Reject NaN/Infinity.
+ Ensure c, m, y, k are finite real numbers; if not, mark colorNotFinite.
+
+
+Validate input range.
+ Make sure c, m, y, k are each between 0 and 1; otherwise mark colorRange.
+
+
+If any error so far, stop and return it.
+ Don’t write to outputs when there’s an error.
+
+
+Apply the inverse formulas to get real-valued RGB.
+
+
+R* = 255 × (1 − C) × (1 − K)
+
+
+G* = 255 × (1 − M) × (1 − K)
+
+
+B* = 255 × (1 − Y) × (1 − K)
+
+
+Round to the nearest integers.
+ Convert R*, G*, B* to integer channel values (nearest, not truncated).
+
+
+Protect against tiny float errors.
+ If rounding produced something slightly outside [0, 255], force it back into range.
+
+
+Write results to the outputs and succeed.
+ Store the integers in *r, *g, *b and return colorOk.
+
+
+What the tests do (high level)
+Black case test
+ Convert (0,0,0) to CMYK and check it’s exactly (0,0,0,1) (within tiny tolerance).
+
+
+Yellow case test
+ Convert (255,255,0) to CMYK and check K≈0, C≈0, M≈0, Y≈1.
+
+
+Round-trip test
+ Take a mid color like (12,200,123), convert to CMYK and back, and check the result matches the original within ±1 per channel (because of rounding).
+
+
+Error tests
+ Feed bad inputs (RGB outside 0–255, CMYK outside 0–1, NaN, and NULL output pointers) and verify the expected error flags (colorRange, colorNotFinite, colorNull) appear.
