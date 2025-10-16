@@ -24,3 +24,22 @@ int containsWithin(const int *arr, int size, int x, int i, int j) {
     return false;
 
 }
+
+
+
+
+
+int * paddedCopy(const int *arr, int oldSize, int newSize) {
+    int *newArray = malloc(newSize * sizeof(int));
+    for(i=0; i < size; i++) {
+        if(i < oldSize) {
+            newArray[i] = arr[i];
+        } else {
+            newArray[i] = 0; 
+        }
+
+    }
+
+
+}
+
