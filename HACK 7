@@ -1,0 +1,9 @@
+int contains(const int *arr, int size, int x) {
+    for(i=0; i < size; i++) {
+        if(arr[i] == x) {
+            return true;
+        }
+
+    }
+
+}
